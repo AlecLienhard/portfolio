@@ -10,7 +10,7 @@ ARG BUILD_DATE=""
 ENV PUBLIC_BUILD_SHA=${BUILD_SHA} PUBLIC_BUILD_DATE=${BUILD_DATE} ASTRO_TELEMETRY_DISABLED=1
 RUN npm run build && node scripts/csp.mjs dist /app/csp.conf
 
-FROM nginxinc/nginx-unprivileged:1.30-alpine
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY deploy/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/csp.conf /etc/nginx/snippets/csp.conf
