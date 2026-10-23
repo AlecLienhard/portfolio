@@ -1,0 +1,135 @@
+---
+const links = [
+  { href: '/#work', label: 'Work' },
+  { href: '/#experience', label: 'Experience' },
+  { href: '/#homelab', label: 'Homelab' },
+  { href: '/#contact', label: 'Contact' },
+];
+---
+
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a href="/" class="nav__logo" aria-label="Home">
+      <span class="nav__mark">L</span><span class="nav__dot"></span>
+      <span class="mono nav__domain">lnrd.lol</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav__links">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <button class="nav__cmd" type="button" data-open-palette aria-label="Open command palette">
+      <span class="nav__cmd-label">Jump to…</span>
+      <kbd>Ctrl</kbd><kbd>K</kbd>
+    </button>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll('[data-open-palette]').forEach((el) =>
+    el.addEventListener('click', () => window.dispatchEvent(new Event('palette:open'))),
+  );
+  // Show ⌘ on Apple platforms.
+  if (/Mac|iPhone|iPad/.test(navigator.platform)) {
+    document.querySelectorAll('.nav__cmd kbd:first-of-type').forEach((k) => (k.textContent = '⌘'));
+  }
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav?.classList.toggle('is-scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: env(safe-area-inset-top, 0px);
+    transition: background 0.3s, border-color 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.is-scrolled {
+    background: rgb(11 13 18 / 0.75);
+    backdrop-filter: blur(14px) saturate(1.4);
+    border-color: var(--line);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 4.25rem;
+  }
+  .nav__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.35rem;
+  }
+  .nav__mark {
+    color: var(--signal);
+  }
+  .nav__dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--cyan);
+    align-self: flex-start;
+    margin-top: 0.35rem;
+  }
+  .nav__domain {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-left: 0.6rem;
+    font-weight: 400;
+  }
+  .nav__links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav__links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  .nav__links a:hover {
+    color: var(--text);
+  }
+  nav {
+    margin-left: auto;
+  }
+  .nav__cmd {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.45rem 0.6rem 0.45rem 0.9rem;
+    color: var(--muted);
+    font: 0.85rem var(--font-display);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav__cmd:hover {
+    border-color: var(--signal);
+    color: var(--text);
+  }
+  .nav__cmd-label {
+    margin-right: 0.3rem;
+  }
+  @media (max-width: 760px) {
+    nav,
+    .nav__domain {
+      display: none;
+    }
+    .nav__cmd {
+      margin-left: auto;
+    }
+  }
+</style>

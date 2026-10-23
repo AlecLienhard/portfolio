@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+---
+
+<Base title="404 · lnrd.lol">
+  <Nav />
+  <main class="wrap nf">
+    <p class="mono nf__code">HTTP 404 · upstream: none</p>
+    <h1>This route isn’t in the tunnel config.</h1>
+    <pre class="mono nf__term">$ curl -I {'<this url>'}
+HTTP/2 404
+x-served-by: nginx (static, read-only)
+x-hint: try the home page</pre>
+    <a class="btn btn--primary" href="/">← Back home</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 70svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-block: 4rem;
+  }
+  .nf__code {
+    color: var(--signal);
+    margin: 0;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0;
+    max-width: 16ch;
+  }
+  .nf__term {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    color: var(--muted);
+    max-width: 100%;
+    overflow-x: auto;
+  }
+</style>

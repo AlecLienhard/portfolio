@@ -1,0 +1,224 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile, experience, education, skills } from '../data/profile';
+---
+
+<Base title={`Resume · ${profile.name}`} description={`Resume of ${profile.name}: ${profile.headline}`} palette={false}>
+  <div class="toolbar">
+    <a href="/" class="mono">← lnrd.lol</a>
+    <button type="button" class="btn btn--primary" data-print>Print / Save as PDF</button>
+  </div>
+
+  <main class="paper">
+    <header class="r-head">
+      <h1>{profile.name}</h1>
+      <p class="r-sub">{profile.headline}</p>
+      <p class="r-contact">
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <span>·</span><a href={profile.links.linkedin}>linkedin.com/in/alec-lienhard</a>
+        <span>·</span><a href={profile.links.github}>github.com/AlecLienhard</a>
+        <span>·</span><a href="https://lnrd.lol">lnrd.lol</a>
+        <span>·</span>{profile.location}
+      </p>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p>{profile.summary}</p>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <dl class="r-skills">
+        {
+          skills.map((g) => (
+            <>
+              <dt>{g.name}</dt>
+              <dd>{g.items.join(', ')}</dd>
+            </>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      {
+        experience.map((r) => (
+          <article class="r-role">
+            <div class="r-role__head">
+              <h3>
+                {r.title} <span>· {r.org}</span>
+              </h3>
+              <span class="r-date">{r.period}</span>
+            </div>
+            <ul>
+              {r.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+          </article>
+        ))
+      }
+    </section>
+
+    <section>
+      <h2>Homelab</h2>
+      <p>
+        Two-node Proxmox cluster run like production: Debian VMs with Docker Compose stacks, fully managed by Ansible
+        (11 roles, Vault-encrypted secrets, rebuild playbooks verified at changed=0), nightly Proxmox Backup Server
+        jobs, Grafana/Loki/Prometheus monitoring, and public services exposed only through Cloudflare Tunnels. It hosts
+        this resume.
+      </p>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="r-role__head">
+        <h3>{education.degree} <span>· {education.school}</span></h3>
+        <span class="r-date">{education.period}</span>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>
+
+<style is:global>
+  body:has(.paper) {
+    background: #e9ebef;
+  }
+</style>
+
+<style>
+  .toolbar {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 1.25rem var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .toolbar a {
+    color: #333;
+    text-decoration: none;
+  }
+  .paper {
+    max-width: 52rem;
+    margin: 0 auto 3rem;
+    background: #fff;
+    color: #1b1e25;
+    padding: clamp(1.5rem, 5vw, 3.25rem);
+    border-radius: 6px;
+    box-shadow: 0 10px 40px -20px rgb(0 0 0 / 0.35);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .paper a {
+    color: inherit;
+  }
+  h1 {
+    font-size: 2.4rem;
+    letter-spacing: -0.03em;
+    margin: 0;
+    line-height: 1.1;
+  }
+  .r-sub {
+    margin: 0.3rem 0 0.5rem;
+    font-weight: 500;
+    color: #3d4a1a;
+  }
+  .r-contact {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #555;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  section {
+    margin-top: 1.4rem;
+  }
+  h2 {
+    font: 600 0.75rem var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #4f6b00;
+    border-bottom: 1.5px solid #1b1e25;
+    padding-bottom: 0.3rem;
+    margin: 0 0 0.7rem;
+  }
+  section > p {
+    margin: 0;
+  }
+  .r-skills {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0;
+  }
+  .r-skills dt {
+    font-weight: 600;
+  }
+  .r-skills dd {
+    margin: 0;
+  }
+  .r-role {
+    margin-bottom: 0.9rem;
+    break-inside: avoid;
+  }
+  .r-role__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+  h3 span {
+    font-weight: 400;
+    color: #555;
+  }
+  .r-date {
+    font: 0.78rem var(--font-mono);
+    color: #555;
+    white-space: nowrap;
+  }
+  .r-role ul {
+    margin: 0.35rem 0 0;
+    padding-left: 1.1rem;
+  }
+  .r-role li {
+    margin-bottom: 0.2rem;
+  }
+  @media (max-width: 560px) {
+    .r-skills {
+      grid-template-columns: 1fr;
+    }
+    .r-skills dd {
+      margin-bottom: 0.4rem;
+    }
+  }
+  @media print {
+    @page {
+      margin: 0.5in;
+    }
+    .toolbar {
+      display: none;
+    }
+    .paper {
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      max-width: none;
+      font-size: 10pt;
+    }
+    .paper a {
+      text-decoration: none;
+    }
+  }
+</style>
