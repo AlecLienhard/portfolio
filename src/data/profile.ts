@@ -10,7 +10,8 @@ export const profile = {
   summary:
     'I build the internal web portals teams use to get work done: React + TypeScript on Backstage, ' +
     'backed by n8n and AWX workflows that do the heavy lifting. Before that I spent years on the ops side, ' +
-    'running VMware, AWS and Active Directory at enterprise scale and automating patching end to end, ' +
+    'running VMware, AWS, Active Directory and Okta at enterprise scale, inside PCI, SOC 2 and HIPAA controls, ' +
+    'and automating patching end to end, ' +
     'so I build tools for the people I used to be.',
   email: 'alienhard01@gmail.com',
   links: {
@@ -52,8 +53,10 @@ export const experience: Role[] = [
       'Design data-heavy UIs, including inline-editable database tables and calendar and schedule views (FullCalendar) built on the same data.',
       'Integrate a wide API surface into single views: SentinelOne, OpsRamp, AWX, Kibana, AWS, ServiceNow and more.',
       'Built and extended an in-house patch orchestration platform (Python, JavaScript, MySQL, PowerShell) with automated scheduling, real-time monitoring and self-healing.',
+      'Build, integrate and manage identity: Okta as the identity provider, with SSO via SAML for internal applications.',
+      'Helped migrate the VM estate from VMware to Proxmox.',
     ],
-    stack: ['Backstage', 'React', 'TypeScript', 'n8n', 'AWX', 'Python', 'REST APIs'],
+    stack: ['Backstage', 'React', 'TypeScript', 'n8n', 'AWX', 'Okta', 'Proxmox'],
   },
   {
     title: 'Systems Administrator',
@@ -62,10 +65,11 @@ export const experience: Role[] = [
     highlights: [
       'Managed VMware environments hosting 7,000+ client systems and AWS operations across 150+ accounts.',
       'Administered Active Directory across 500+ domains and 300 forests, including GPOs and security policy.',
+      'Kept systems in line with PCI DSS, SOC 2 and HIPAA requirements, including PCI vulnerability remediation and audited change control.',
       'Wrote PowerShell automation that removed 90% of manual tasks, and built the first version of the patching platform.',
       'Promoted twice, to Systems Administrator 2 and then to DevOps L4.',
     ],
-    stack: ['VMware', 'AWS', 'Active Directory', 'DNS', 'PowerShell'],
+    stack: ['VMware', 'AWS', 'Active Directory', 'PCI DSS', 'PowerShell'],
   },
   {
     title: 'Associate Systems Administrator',
@@ -73,7 +77,7 @@ export const experience: Role[] = [
     period: 'Jun 2023 – Jul 2024',
     highlights: [
       'Handled incident, problem and change management under ITIL, working with vendors and internal support.',
-      'Did hardware and software upgrades, server installs and VMware-based infrastructure work for enterprise clients.',
+      'Administered and upgraded enterprise client VMs remotely across a VMware-based infrastructure.',
     ],
     stack: ['VMware', 'Windows Server', 'ITIL'],
   },
@@ -94,9 +98,10 @@ export const skills: SkillGroup[] = [
   { name: 'Frontend', items: ['React', 'TypeScript', 'Backstage', 'Astro', 'FullCalendar', 'UI/UX for data'] },
   { name: 'Automation', items: ['n8n', 'Ansible', 'AWX', 'PowerShell', 'Python', 'Bash'] },
   { name: 'Integrations', items: ['ServiceNow', 'SentinelOne', 'OpsRamp', 'Kibana', 'Sumo Logic', 'AWS APIs'] },
-  { name: 'Infrastructure', items: ['Proxmox', 'VMware', 'Docker Compose', 'AWS', 'Active Directory', 'Cloudflare'] },
+  { name: 'Infrastructure', items: ['Proxmox', 'VMware', 'Docker Compose', 'AWS', 'Windows Server', 'Cloudflare'] },
+  { name: 'Security & Identity', items: ['Okta', 'SSO / SAML', 'Active Directory', 'PCI DSS', 'SOC 2', 'HIPAA'] },
   { name: 'Ops', items: ['Grafana', 'Loki', 'Prometheus', 'GitHub Actions', 'ITIL change mgmt', 'Agile/Scrum'] },
 ];
 
 // The APIs orbiting the "integrations" visual on the home page.
-export const integrations = ['ServiceNow', 'SentinelOne', 'OpsRamp', 'AWX', 'Kibana', 'AWS', 'n8n', 'Sumo Logic'];
+export const integrations = ['ServiceNow', 'SentinelOne', 'OpsRamp', 'AWX', 'Kibana', 'AWS', 'Okta', 'n8n', 'Sumo Logic'];
