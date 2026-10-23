@@ -15,7 +15,7 @@ export const profile = {
   email: 'alienhard01@gmail.com',
   links: {
     github: 'https://github.com/AlecLienhard',
-    linkedin: 'https://www.linkedin.com/in/alec-lienhard',
+    linkedin: 'https://www.linkedin.com/in/alec-lienhard-2a3372108',
   },
 } as const;
 
