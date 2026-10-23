@@ -11,6 +11,13 @@ ENV PUBLIC_BUILD_SHA=${BUILD_SHA} PUBLIC_BUILD_DATE=${BUILD_DATE} ASTRO_TELEMETR
 RUN npm run build && node scripts/csp.mjs dist /app/csp.conf
 
 FROM nginxinc/nginx-unprivileged:1.30-alpine
+# Pull Alpine security fixes that landed after the base image was published.
+# BUILD_DATE in the command busts the CI layer cache at least once a day, so
+# this never gets stuck on a cached, stale result.
+ARG BUILD_DATE=""
+USER root
+RUN echo "os patches as of ${BUILD_DATE:-unknown}" && apk upgrade --no-cache
+USER 101
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY deploy/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/csp.conf /etc/nginx/snippets/csp.conf
