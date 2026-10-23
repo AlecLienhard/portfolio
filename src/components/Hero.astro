@@ -1,0 +1,205 @@
+---
+import SignalField from './islands/SignalField';
+import { profile, stats } from '../data/profile';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__field"><SignalField client:visible /></div>
+  <div class="hero__fade" aria-hidden="true"></div>
+
+  <div class="wrap hero__inner">
+    <p class="eyebrow hero__status">
+      <span class="hero__pulse" aria-hidden="true"></span> Served from my homelab · {profile.location}
+    </p>
+
+    <h1 id="hero-title" class="hero__title">
+      <span class="hero__name">{profile.name}</span>
+      <span class="hero__line">
+        I build{' '}
+        <span class="hero__ticker" data-words={JSON.stringify(profile.roles)} aria-live="off">{profile.roles[0]}</span>
+      </span>
+    </h1>
+
+    <p class="hero__lede">{profile.summary}</p>
+
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#work">See what I build <span aria-hidden="true">↓</span></a>
+      <a class="btn" href="#homelab">Tour the homelab</a>
+      <button class="btn hero__kbd" type="button" data-open-palette>
+        or press <kbd>Ctrl</kbd> <kbd>K</kbd>
+      </button>
+    </div>
+
+    <dl class="hero__stats">
+      {
+        stats.map((s, i) => (
+          <div class="hero__stat" data-reveal style={`--i:${i}`}>
+            <dt>{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<script>
+  // Word cycler: deletes and retypes the role after "I build".
+  const el = document.querySelector<HTMLElement>('.hero__ticker');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (el && !reduced) {
+    const words: string[] = JSON.parse(el.dataset.words ?? '[]');
+    let wi = 0;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      for (;;) {
+        await sleep(2200);
+        const word = words[wi];
+        for (let i = word.length; i >= 0; i--) {
+          el.textContent = word.slice(0, i);
+          await sleep(28);
+        }
+        wi = (wi + 1) % words.length;
+        const next = words[wi];
+        for (let i = 1; i <= next.length; i++) {
+          el.textContent = next.slice(0, i);
+          await sleep(55);
+        }
+      }
+    })();
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: calc(100svh - 4.25rem);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-block: 3rem 4rem;
+  }
+  .hero__field {
+    position: absolute;
+    inset: 0;
+  }
+  .hero__fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 40%, rgb(11 13 18 / 0.85), transparent 70%),
+      linear-gradient(to bottom, transparent 70%, var(--ink));
+  }
+  .hero__inner {
+    position: relative;
+  }
+  .hero__status {
+    color: var(--muted);
+  }
+  .hero__status::before {
+    display: none;
+  }
+  .hero__pulse {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 0 rgb(198 244 50 / 0.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px rgb(198 244 50 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(198 244 50 / 0);
+    }
+  }
+  .hero__title {
+    margin: 0 0 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+  }
+  .hero__name {
+    display: block;
+    font-size: clamp(3.2rem, 11vw, 9.5rem);
+    background: linear-gradient(100deg, var(--text) 40%, var(--signal) 75%, var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero__line {
+    display: block;
+    margin-top: 1rem;
+    font-size: clamp(1.6rem, 4.4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    color: var(--muted);
+    font-weight: 500;
+    min-height: 1.1em;
+  }
+  .hero__ticker {
+    color: var(--text);
+    border-right: 3px solid var(--signal);
+    padding-right: 0.15em;
+    animation: caret 1s steps(1) infinite;
+  }
+  @keyframes caret {
+    50% {
+      border-color: transparent;
+    }
+  }
+  .hero__lede {
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    margin: 0 0 2.25rem;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .hero__kbd {
+    border-color: transparent;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 4rem 0 0;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .hero__stat {
+    background: rgb(17 20 27 / 0.85);
+    backdrop-filter: blur(6px);
+    padding: 1.25rem 1.4rem;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .hero__stat dd {
+    margin: 0;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .hero__stat dt {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 760px) {
+    .hero__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hero__kbd {
+      display: none;
+    }
+  }
+</style>

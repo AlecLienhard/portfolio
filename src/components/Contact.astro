@@ -1,0 +1,106 @@
+---
+import { profile } from '../data/profile';
+
+const sha = (import.meta.env.PUBLIC_BUILD_SHA ?? 'dev').slice(0, 7);
+const built = import.meta.env.PUBLIC_BUILD_DATE ?? new Date().toISOString().slice(0, 10);
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2 id="contact-title" class="contact__title" data-reveal>
+      Let’s build the <span>boring stuff</span> so nobody has to do it twice.
+    </h2>
+    <div class="contact__row" data-reveal>
+      <a class="contact__email" href={`mailto:${profile.email}`}>{profile.email}</a>
+      <button class="btn" type="button" data-copy={profile.email}>Copy</button>
+    </div>
+    <ul class="contact__links" data-reveal>
+      <li><a class="btn" href={profile.links.github} rel="me noopener" target="_blank">GitHub ↗</a></li>
+      <li><a class="btn" href={profile.links.linkedin} rel="me noopener" target="_blank">LinkedIn ↗</a></li>
+      <li><a class="btn" href="/resume">Resume →</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot__inner mono">
+    <span>© {new Date().getFullYear()} {profile.name}</span>
+    <span class="foot__build">
+      Astro + React · nginx on Proxmox · via Cloudflare Tunnel · build <b>{sha}</b> · {built}
+    </span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy ?? '');
+        b.textContent = 'Copied ✓';
+      } catch {
+        b.textContent = 'Select & copy';
+      }
+      setTimeout(() => (b.textContent = 'Copy'), 1800);
+    }),
+  );
+</script>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--line);
+  }
+  .contact__title {
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 0 0 2.5rem;
+    max-width: 16ch;
+  }
+  .contact__title span {
+    color: var(--signal);
+    font-style: italic;
+  }
+  .contact__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .contact__email {
+    font-size: clamp(1.2rem, 3.5vw, 2rem);
+    font-weight: 600;
+    text-decoration: none;
+    background: linear-gradient(var(--signal), var(--signal)) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.4s var(--ease);
+    overflow-wrap: anywhere;
+  }
+  .contact__email:hover {
+    background-size: 100% 2px;
+  }
+  .contact__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .foot {
+    border-top: 1px solid var(--line);
+    padding-block: 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .foot__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+  }
+  .foot__build b {
+    color: var(--signal);
+    font-weight: 500;
+  }
+</style>

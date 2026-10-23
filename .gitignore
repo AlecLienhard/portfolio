@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+deploy/csp.conf
+
+# Local-only: real network details, personal docs, editor/agent state
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+homelab-ansible-main/
+resume.pdf
+*.pdf
+.env
+.env.*

@@ -1,0 +1,249 @@
+---
+import FlowDemo from './islands/FlowDemo';
+import ScheduleDemo from './islands/ScheduleDemo';
+import { integrations } from '../data/profile';
+---
+
+<section id="work" class="section work" aria-labelledby="work-title">
+  <div class="wrap">
+    <p class="eyebrow">What I build</p>
+    <h2 id="work-title" class="h2" data-reveal>Portals that hide the plumbing.</h2>
+    <p class="lede" data-reveal>
+      My day job is Backstage: React and TypeScript front ends that put complicated, multi-team processes behind
+      one clean screen. The demos below are simplified, but they're the real shape of the work. Go ahead and click them.
+    </p>
+
+    <div class="bento">
+      <article class="card card--flow" data-reveal>
+        <header class="card__head">
+          <span class="card__tag mono">01 · Orchestration</span>
+          <h3>Self-service, end to end</h3>
+          <p>
+            A form in Backstage kicks off an n8n workflow that drives AWX, ServiceNow and security and monitoring tools,
+            with live status coming back to the portal. Teams get a button instead of a ticket queue.
+          </p>
+        </header>
+        <FlowDemo client:visible />
+      </article>
+
+      <article class="card card--sched" data-reveal style="--i:1">
+        <header class="card__head">
+          <span class="card__tag mono">02 · Data UX</span>
+          <h3>Edit the table, watch the calendar</h3>
+          <p>
+            Inline-editable database tables feed FullCalendar-style views from the same source. Try changing a day or
+            start time.
+          </p>
+        </header>
+        <ScheduleDemo client:visible />
+      </article>
+
+      <article class="card card--orbit" data-reveal style="--i:2">
+        <header class="card__head">
+          <span class="card__tag mono">03 · Integrations</span>
+          <h3>Many APIs, one view</h3>
+          <p>Security, monitoring, logging, cloud and ITSM data, all stitched into the pages people actually use.</p>
+        </header>
+        <div class="orbit" aria-label={`Integrations: ${integrations.join(', ')}`} role="img">
+          <div class="orbit__core mono">Backstage</div>
+          <div class="orbit__ring">
+            {
+              integrations.map((name, i) => (
+                <span class="orbit__item" style={`--a:${(360 / integrations.length) * i}deg`}>
+                  <span class="orbit__label mono">{name}</span>
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </article>
+
+      <article class="card card--patch" data-reveal style="--i:3">
+        <header class="card__head">
+          <span class="card__tag mono">04 · Platform</span>
+          <h3>Patching that runs itself</h3>
+          <p>
+            Before Backstage, I built an in-house patch orchestration platform (Python, JavaScript, MySQL, PowerShell)
+            with schedule generation, real-time monitoring and self-healing retries, across thousands of servers.
+          </p>
+        </header>
+        <ul class="patch">
+          <li><span class="patch__n">7k+</span><span>VMs in scope</span></li>
+          <li><span class="patch__n">90%</span><span>less manual work</span></li>
+          <li><span class="patch__n">2</span><span>promotions since 2023</span></li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 3.5rem;
+  }
+  .card {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius) + 6px);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .card:hover {
+    border-color: #3a4255;
+  }
+  .card--flow {
+    grid-column: span 7;
+  }
+  .card--sched {
+    grid-column: span 5;
+  }
+  .card--orbit {
+    grid-column: span 5;
+  }
+  .card--patch {
+    grid-column: span 7;
+    justify-content: space-between;
+  }
+  .card__tag {
+    font-size: 0.75rem;
+    color: var(--signal);
+  }
+  .card__head h3 {
+    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    letter-spacing: -0.02em;
+    margin: 0.4rem 0 0.5rem;
+    line-height: 1.15;
+  }
+  .card__head p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.98rem;
+  }
+
+  .orbit {
+    position: relative;
+    aspect-ratio: 1;
+    width: min(100%, 20rem);
+    margin: auto;
+    container-type: inline-size;
+  }
+  .orbit::before,
+  .orbit::after {
+    content: '';
+    position: absolute;
+    border: 1px dashed var(--line);
+    border-radius: 50%;
+  }
+  .orbit::before {
+    inset: 8%;
+  }
+  .orbit::after {
+    inset: 28%;
+    border-style: solid;
+  }
+  .orbit__core {
+    position: absolute;
+    inset: 36%;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--signal);
+    color: var(--signal-ink);
+    font-weight: 700;
+    font-size: 0.78rem;
+    box-shadow: 0 0 60px -10px var(--signal);
+    z-index: 1;
+  }
+  .orbit__ring {
+    position: absolute;
+    inset: 0;
+    animation: spin 40s linear infinite;
+  }
+  .orbit:hover .orbit__ring,
+  .orbit:hover .orbit__label {
+    animation-play-state: paused;
+  }
+  .orbit__item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: rotate(var(--a)) translateY(calc(-1 * var(--orbit-r, 42cqi)));
+  }
+  .orbit__label {
+    display: block;
+    transform: translate(-50%, -50%) rotate(calc(var(--a) * -1));
+    animation: counter 40s linear infinite;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  @container (max-width: 340px) {
+    .orbit__item {
+      --orbit-r: 33cqi;
+    }
+    .orbit__label {
+      font-size: 0.66rem;
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes counter {
+    from {
+      transform: translate(-50%, -50%) rotate(calc(var(--a) * -1));
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(calc(var(--a) * -1 - 360deg));
+    }
+  }
+
+  .patch {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .patch li {
+    border-top: 2px solid var(--line);
+    padding-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .patch li:first-child {
+    border-color: var(--signal);
+  }
+  .patch__n {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  @media (max-width: 960px) {
+    .card--flow,
+    .card--sched,
+    .card--orbit,
+    .card--patch {
+      grid-column: span 12;
+    }
+  }
+</style>

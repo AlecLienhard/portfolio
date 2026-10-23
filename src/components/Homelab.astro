@@ -1,0 +1,359 @@
+---
+import Topology from './islands/Topology';
+import TerminalReplay from './islands/TerminalReplay';
+import { labStats, migration, lessons } from '../data/homelab';
+
+const pillars = [
+  { k: 'IaC', t: 'Ansible, all of it', d: 'Eleven roles cover networking, base OS, Docker, NFS, NVIDIA, tunnels and backups. Any VM rebuilds from a fresh Debian install.' },
+  { k: 'Secrets', t: 'Vault, never plaintext', d: 'Credentials and .env files are Ansible Vault-encrypted in git, and a one-line check fails if anything slips through unencrypted.' },
+  { k: 'Backups', t: 'Rebuild + restore', d: 'App data goes to Proxmox Backup Server nightly. NAS config is pulled weekly over its API, encrypted and versioned in git.' },
+  { k: 'Observability', t: 'Logs and metrics in one place', d: 'Grafana Alloy on every VM ships to Loki and Prometheus, so failures show up on a dashboard instead of weeks later.' },
+  { k: 'Ops UX', t: 'A CLI for humans', d: 'A custom `update` wrapper with tab completion and a man page: one service, one stack, one VM or everything, with safe reboot ordering.' },
+  { k: 'Delivery', t: 'This site, too', d: 'Pushing to main runs type checks, builds a static nginx image in GitHub Actions and publishes it to GHCR. `update portfolio` rolls it out.' },
+];
+---
+
+<section id="homelab" class="section lab" aria-labelledby="lab-title">
+  <div class="lab__glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow">Homelab</p>
+    <h2 id="lab-title" class="h2" data-reveal>The server this page came from.</h2>
+    <p class="lede" data-reveal>
+      A two-node Proxmox cluster in my house, run like production: everything in git, everything rebuildable,
+      nothing admin-facing on the internet. Explore it below. Names are generalized and no addresses are shown.
+    </p>
+
+    <dl class="lab__stats">
+      {
+        labStats.map((s, i) => (
+          <div data-reveal style={`--i:${i}`}>
+            <dd>{s.value}</dd>
+            <dt>{s.label}</dt>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="lab__topo" data-reveal>
+      <Topology client:visible />
+    </div>
+
+    <div class="lab__split">
+      <div class="migrate" data-reveal>
+        <h3 class="lab__h3">The migration</h3>
+        <p class="lab__p">
+          In Sept–Oct 2026 I tore down the old setup and rebuilt it, moving app data service by service with no
+          bulk copies of the media libraries.
+        </p>
+        <div class="migrate__switch" role="radiogroup" aria-label="Before or after">
+          <input type="radio" name="era" id="era-before" />
+          <label for="era-before">Before</label>
+          <input type="radio" name="era" id="era-after" checked />
+          <label for="era-after">After</label>
+          <span class="migrate__thumb" aria-hidden="true"></span>
+        </div>
+        <div class="migrate__panes">
+          {
+            [migration.before, migration.after].map((era, i) => (
+              <div class="migrate__pane" data-era={i === 0 ? 'before' : 'after'}>
+                <h4 class="mono">{era.title}</h4>
+                <ul>
+                  {era.points.map((p) => <li>{p}</li>)}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div data-reveal style="--i:1">
+        <h3 class="lab__h3">Day-to-day ops</h3>
+        <p class="lab__p">Replays of real commands, abridged and with host names changed.</p>
+        <TerminalReplay client:visible />
+      </div>
+    </div>
+
+    <div class="pillars">
+      {
+        pillars.map((p, i) => (
+          <article class="pillar" data-reveal style={`--i:${i % 3}`}>
+            <span class="mono pillar__k">{p.k}</span>
+            <h3>{p.t}</h3>
+            <p set:html={p.d.replace(/`([^`]+)`/g, '<code>$1</code>')} />
+          </article>
+        ))
+      }
+    </div>
+
+    <h3 class="lab__h3 lab__lessons-title" data-reveal>Lessons learned</h3>
+    <div class="lessons">
+      {
+        lessons.map((l, i) => (
+          <details class="lesson" data-reveal style={`--i:${i}`} open={i === 0}>
+            <summary>
+              <span class="mono lesson__n">{String(i + 1).padStart(2, '0')}</span>
+              {l.title}
+            </summary>
+            <p>{l.body}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .lab {
+    overflow: hidden;
+  }
+  .lab__glow {
+    position: absolute;
+    width: 60rem;
+    height: 60rem;
+    left: 50%;
+    top: 10rem;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgb(198 244 50 / 0.07), transparent 60%);
+    pointer-events: none;
+  }
+  .lab .wrap {
+    position: relative;
+  }
+  .lab__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 3rem;
+    margin: 2.5rem 0;
+  }
+  .lab__stats div {
+    display: flex;
+    flex-direction: column;
+  }
+  .lab__stats dd {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--signal);
+    line-height: 1.1;
+  }
+  .lab__stats dt {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .lab__topo {
+    margin-bottom: 4rem;
+  }
+  .lab__split {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+  }
+  .lab__h3 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+  }
+  .lab__p {
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+  }
+
+  .migrate__switch {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.25rem;
+    margin-bottom: 1rem;
+  }
+  .migrate__switch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .migrate__switch label {
+    position: relative;
+    z-index: 1;
+    padding: 0.45rem 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .migrate__switch input:checked + label {
+    color: var(--signal-ink);
+  }
+  .migrate__switch input:focus-visible + label {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+  .migrate__thumb {
+    position: absolute;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    left: 0.25rem;
+    width: calc(50% - 0.25rem);
+    border-radius: 999px;
+    background: var(--signal);
+    transition: transform 0.4s var(--ease), background 0.4s;
+  }
+  .migrate__switch:has(#era-before:checked) .migrate__thumb {
+    background: var(--muted);
+  }
+  .migrate__switch:has(#era-after:checked) .migrate__thumb {
+    transform: translateX(100%);
+  }
+  .migrate__panes {
+    display: grid;
+  }
+  .migrate__pane {
+    grid-area: 1 / 1;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .migrate__pane h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+    font-weight: 500;
+  }
+  .migrate__pane[data-era='before'] h4 {
+    color: var(--muted);
+  }
+  .migrate__pane ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  .migrate__pane li {
+    margin-bottom: 0.45rem;
+  }
+  .migrate:has(#era-after:checked) [data-era='before'],
+  .migrate:has(#era-before:checked) [data-era='after'] {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius) + 6px);
+    overflow: hidden;
+    margin-bottom: 4rem;
+  }
+  .pillar {
+    background: var(--ink);
+    padding: 1.5rem;
+    transition: background 0.3s;
+  }
+  .pillar:hover {
+    background: var(--ink-2);
+  }
+  .pillar__k {
+    font-size: 0.72rem;
+    color: var(--signal);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pillar h3 {
+    margin: 0.4rem 0 0.5rem;
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+  .pillar p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .pillar :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--text);
+    background: var(--surface);
+    padding: 0.1rem 0.35rem;
+    border-radius: 5px;
+  }
+
+  .lab__lessons-title {
+    margin-bottom: 1.25rem;
+  }
+  .lessons {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .lesson {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--ink-2);
+    transition: border-color 0.3s;
+  }
+  .lesson[open] {
+    border-color: #3a4255;
+  }
+  .lesson summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.1rem 1.3rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .lesson summary::-webkit-details-marker {
+    display: none;
+  }
+  .lesson summary::after {
+    content: '+';
+    margin-left: auto;
+    color: var(--signal);
+    font-family: var(--font-mono);
+    transition: transform 0.3s var(--ease);
+  }
+  .lesson[open] summary::after {
+    transform: rotate(45deg);
+  }
+  .lesson__n {
+    color: var(--signal);
+    font-size: 0.8rem;
+  }
+  .lesson p {
+    margin: 0;
+    padding: 0 1.3rem 1.2rem 3.4rem;
+    color: var(--muted);
+    max-width: 75ch;
+  }
+
+  @media (max-width: 960px) {
+    .lab__split {
+      grid-template-columns: 1fr;
+    }
+    .pillars {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+    .lesson p {
+      padding-left: 1.3rem;
+    }
+  }
+</style>
