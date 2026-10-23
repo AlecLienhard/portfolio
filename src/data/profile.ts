@@ -5,7 +5,7 @@ export const profile = {
   name: 'Alec Lienhard',
   shortName: 'Alec',
   location: 'Denver metro, Colorado',
-  headline: 'Developer building internal platforms on Backstage, and the automation behind them.',
+  headline: 'DevOps engineer building internal platforms on Backstage, and the automation behind them.',
   roles: ['internal portals', 'self-service automation', 'API integrations', 'infrastructure as code', 'a homelab'],
   summary:
     'I build the internal web portals teams use to get work done: React + TypeScript on Backstage, ' +
@@ -39,31 +39,21 @@ export interface Role {
   stack: string[];
 }
 
-// TODO(Alec): confirm the current title and start date, and that every role
-// below was at Epsilon (the old resume left the first one as "Company Name").
+// TODO(Alec): confirm the Associate role was at Epsilon too (the old resume
+// left it as "Company Name").
 export const experience: Role[] = [
   {
-    title: 'Developer, Internal Platforms (Backstage)',
+    title: 'Systems Administrator – DevOps (L4)',
     org: 'Epsilon',
-    period: '2026 – Present',
+    period: 'Aug 2025 – Present',
     highlights: [
       'Build internal web portals on Backstage (React + TypeScript) that several teams use as their front door for infrastructure and operations work.',
       'Turn complicated, multi-step business processes into self-service flows: n8n and AWX do the work, and Backstage gives it a UI with validation and live status.',
       'Design data-heavy UIs, including inline-editable database tables and calendar and schedule views (FullCalendar) built on the same data.',
       'Integrate a wide API surface into single views: SentinelOne, OpsRamp, AWX, Kibana, AWS, ServiceNow and more.',
-    ],
-    stack: ['Backstage', 'React', 'TypeScript', 'n8n', 'AWX', 'FullCalendar', 'REST APIs'],
-  },
-  {
-    title: 'Systems Administrator – DevOps (L4)',
-    org: 'Epsilon',
-    period: 'Aug 2025 – 2026',
-    highlights: [
       'Built and extended an in-house patch orchestration platform (Python, JavaScript, MySQL, PowerShell) with automated scheduling, real-time monitoring and self-healing.',
-      'Designed event-driven remediation workflows in n8n that respond to system events and cut manual intervention.',
-      'Orchestrated work across Sumo Logic, ServiceNow, OpsRamp, Ansible/AWX and AWS through their APIs.',
     ],
-    stack: ['Ansible/AWX', 'n8n', 'Python', 'PowerShell', 'MySQL', 'AWS'],
+    stack: ['Backstage', 'React', 'TypeScript', 'n8n', 'AWX', 'Python', 'REST APIs'],
   },
   {
     title: 'Systems Administrator',
